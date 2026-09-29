@@ -1,0 +1,52 @@
+{
+  "valid": true,
+  "errors": 0,
+  "warnings": 9,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[2].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[3].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[7].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[10].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[11].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[13].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[15].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[17].raci",
+      "message": "executable node has no Accountable (A)"
+    },
+    {
+      "severity": "warning",
+      "path": "$.process.nodes[18].raci",
+      "message": "executable node has no Accountable (A)"
+    }
+  ]
+}

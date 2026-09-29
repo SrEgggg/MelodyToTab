@@ -1,0 +1,29 @@
+{
+  "descriptionCharacters": 249,
+  "localLinksChecked": 15,
+  "screenshots": [
+    {
+      "file": "playback.jpg",
+      "width": 1536,
+      "height": 816
+    },
+    {
+      "file": "tablature.jpg",
+      "width": 1536,
+      "height": 816
+    },
+    {
+      "file": "transcription.jpg",
+      "width": 1536,
+      "height": 816
+    }
+  ],
+  "schemaValid": true,
+  "workflowNodes": 23,
+  "workflowEdges": 32,
+  "allNodesReachable": true,
+  "completeLayoutAndMapping": true,
+  "overlappingNodes": 0,
+  "mermaidProjectionMatchesReadme": true,
+  "mermaidRenderedInBrowser": false
+}

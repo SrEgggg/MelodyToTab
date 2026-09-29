@@ -1,0 +1,74 @@
+flowchart TD
+  subgraph STG_INPUT["Choose input"]
+    EVT_START(["Start a melody session"])
+    DEC_SOURCE{"New audio or saved project?"}
+  end
+  subgraph STG_CAPTURE["Capture or restore"]
+    TASK_CAPTURE["Record and stop, or import WAV"]
+    TASK_OPEN["Open and validate .mtab project"]
+    DEC_AUDIO{"Supported usable-length audio?"}
+    DEC_PROJECT{"Project valid?"}
+    EXC_INPUT["Show input error; retry or choose another file"]
+  end
+  subgraph STG_ANALYZE["Analyze"]
+    TASK_ANALYZE["Resample, detect pitches and timing; estimate key and tempo"]
+    DEC_NOTES{"Stable notes detected?"}
+    EXC_QUALITY["Show recording guidance; retry or import"]
+  end
+  subgraph STG_REVIEW["Review"]
+    TASK_REVIEW["Review or edit pitch, timing and fingering; override key and BPM"]
+  end
+  subgraph STG_ARRANGE["Arrange"]
+    TASK_ARRANGE["Assign guitar positions and generate three harmony options"]
+    DEC_RANGE{"Any notes outside fret 0-20 range?"}
+    TASK_TRANSPOSE["Optionally transpose or edit; otherwise retain explicit range flags"]
+    DEC_CHANGED{"Pitch changed?"}
+  end
+  subgraph STG_PLAY["Compare playback"]
+    TASK_PLAY["Choose harmony and compare original, melody or accompanied playback"]
+    DEC_REVISE{"Revise the arrangement?"}
+  end
+  subgraph STG_OUTPUT["Save or export"]
+    TASK_OUTPUT["Choose Save project, PDF or MIDI and a destination"]
+    TASK_WRITE["Write the selected output format"]
+    DEC_WRITE{"Write succeeded?"}
+    EXC_WRITE["Show save or export error; user can retry"]
+    ART_OUTPUT["Chosen .mtab project, printable .pdf or melody .mid"]
+    EVT_END(["Continue composing or close the session"])
+  end
+  EVT_START --> DEC_SOURCE
+  DEC_SOURCE --> |"New audio"| TASK_CAPTURE
+  DEC_SOURCE --> |"Saved project"| TASK_OPEN
+  TASK_CAPTURE --> DEC_AUDIO
+  TASK_CAPTURE --> |"Microphone or file-read error"| EXC_INPUT
+  TASK_OPEN --> DEC_PROJECT
+  DEC_AUDIO --> |"Yes"| TASK_ANALYZE
+  DEC_AUDIO --> |"No"| EXC_INPUT
+  DEC_PROJECT --> |"Yes: restore notes and audio"| TASK_REVIEW
+  DEC_PROJECT --> |"No"| EXC_INPUT
+  EXC_INPUT --> |"User retries"| DEC_SOURCE
+  TASK_ANALYZE --> DEC_NOTES
+  TASK_ANALYZE --> |"Cancel: retained notes or empty state"| TASK_REVIEW
+  DEC_NOTES --> |"Yes"| TASK_REVIEW
+  DEC_NOTES --> |"No"| EXC_QUALITY
+  EXC_QUALITY --> |"New take or WAV"| TASK_CAPTURE
+  TASK_REVIEW --> |"Valid notes; rejected edits keep previous state"| TASK_ARRANGE
+  TASK_ARRANGE --> DEC_RANGE
+  DEC_RANGE --> |"Yes: flag unassigned notes"| TASK_TRANSPOSE
+  DEC_RANGE --> |"No"| TASK_PLAY
+  TASK_TRANSPOSE --> DEC_CHANGED
+  DEC_CHANGED --> |"Yes: regenerate"| TASK_ARRANGE
+  DEC_CHANGED --> |"No: retain warnings"| TASK_PLAY
+  TASK_PLAY --> |"Playback optional; output errors leave session editable"| DEC_REVISE
+  DEC_REVISE --> |"Yes"| TASK_REVIEW
+  DEC_REVISE --> |"No"| TASK_OUTPUT
+  TASK_OUTPUT --> |"Confirm destination"| TASK_WRITE
+  TASK_WRITE --> DEC_WRITE
+  DEC_WRITE --> |"Yes"| ART_OUTPUT
+  DEC_WRITE --> |"No"| EXC_WRITE
+  EXC_WRITE --> |"Retry destination"| TASK_OUTPUT
+  ART_OUTPUT --> |"Local file"| EVT_END
+  classDef action fill:#1f2327,color:#edf0ee,stroke:#65dbbc
+  classDef issue fill:#3a3021,color:#fff2d8,stroke:#f7c16b
+  class EVT_START,DEC_SOURCE,TASK_CAPTURE,TASK_OPEN,DEC_AUDIO,DEC_PROJECT,TASK_ANALYZE,DEC_NOTES,TASK_REVIEW,TASK_ARRANGE,DEC_RANGE,TASK_TRANSPOSE,DEC_CHANGED,TASK_PLAY,DEC_REVISE,TASK_OUTPUT,TASK_WRITE,DEC_WRITE,ART_OUTPUT,EVT_END action
+  class EXC_INPUT,EXC_QUALITY,EXC_WRITE issue

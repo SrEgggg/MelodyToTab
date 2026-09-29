@@ -1,0 +1,1626 @@
+{
+  "schemaVersion": "efd-2.1",
+  "workspace": {
+    "id": "ORG-MELODYTAB",
+    "name": "Melody / Tab local workflow"
+  },
+  "project": {
+    "id": "PRJ-MELODYTAB",
+    "workspaceId": "ORG-MELODYTAB",
+    "name": "Melody / Tab application workflow"
+  },
+  "organizationUnits": [
+    {
+      "id": "UNIT-MUSICIAN",
+      "name": "Musician interaction (functional lane)",
+      "typeCode": "functional",
+      "active": true,
+      "order": 0
+    },
+    {
+      "id": "UNIT-APPLICATION",
+      "name": "Local application (functional lane)",
+      "typeCode": "functional",
+      "active": true,
+      "order": 1
+    }
+  ],
+  "positions": [
+    {
+      "id": "POS-MUSICIAN",
+      "name": "Musician / application user",
+      "unitIds": [
+        "UNIT-MUSICIAN"
+      ],
+      "active": true,
+      "order": 0
+    }
+  ],
+  "systemActors": [
+    {
+      "id": "SYS-MELODYTAB",
+      "name": "Melody / Tab desktop application",
+      "unitId": "UNIT-APPLICATION",
+      "active": true
+    }
+  ],
+  "process": {
+    "id": "PROC-MELODYTAB",
+    "projectId": "PRJ-MELODYTAB",
+    "name": "Record to guitar tab and possible harmonization",
+    "modelKind": "as_is",
+    "stages": [
+      {
+        "id": "STG-INPUT",
+        "name": "Choose input",
+        "order": 0
+      },
+      {
+        "id": "STG-CAPTURE",
+        "name": "Capture or restore",
+        "order": 1
+      },
+      {
+        "id": "STG-ANALYZE",
+        "name": "Analyze",
+        "order": 2
+      },
+      {
+        "id": "STG-REVIEW",
+        "name": "Review",
+        "order": 3
+      },
+      {
+        "id": "STG-ARRANGE",
+        "name": "Arrange",
+        "order": 4
+      },
+      {
+        "id": "STG-PLAY",
+        "name": "Compare playback",
+        "order": 5
+      },
+      {
+        "id": "STG-OUTPUT",
+        "name": "Save or export",
+        "order": 6
+      }
+    ],
+    "nodes": [
+      {
+        "id": "EVT-START",
+        "type": "start",
+        "name": "Start a melody session",
+        "stageId": "STG-INPUT",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-SOURCE",
+        "type": "decision",
+        "name": "New audio or saved project?",
+        "stageId": "STG-INPUT",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-CAPTURE",
+        "type": "task",
+        "name": "Record and stop, or import WAV",
+        "stageId": "STG-CAPTURE",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-OPEN",
+        "type": "system_action",
+        "name": "Open and validate .mtab project",
+        "stageId": "STG-CAPTURE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-AUDIO",
+        "type": "decision",
+        "name": "Supported usable-length audio?",
+        "stageId": "STG-CAPTURE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-PROJECT",
+        "type": "decision",
+        "name": "Project valid?",
+        "stageId": "STG-CAPTURE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "EXC-INPUT",
+        "type": "exception",
+        "name": "Show input error; retry or choose another file",
+        "stageId": "STG-CAPTURE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-ANALYZE",
+        "type": "system_action",
+        "name": "Resample, detect pitches and timing; estimate key and tempo",
+        "stageId": "STG-ANALYZE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-NOTES",
+        "type": "decision",
+        "name": "Stable notes detected?",
+        "stageId": "STG-ANALYZE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "EXC-QUALITY",
+        "type": "exception",
+        "name": "Show recording guidance; retry or import",
+        "stageId": "STG-ANALYZE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-REVIEW",
+        "type": "task",
+        "name": "Review or edit pitch, timing and fingering; override key and BPM",
+        "stageId": "STG-REVIEW",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-ARRANGE",
+        "type": "system_action",
+        "name": "Assign guitar positions and generate three harmony options",
+        "stageId": "STG-ARRANGE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-RANGE",
+        "type": "decision",
+        "name": "Any notes outside fret 0-20 range?",
+        "stageId": "STG-ARRANGE",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-TRANSPOSE",
+        "type": "task",
+        "name": "Optionally transpose or edit; otherwise retain explicit range flags",
+        "stageId": "STG-ARRANGE",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-CHANGED",
+        "type": "decision",
+        "name": "Pitch changed?",
+        "stageId": "STG-ARRANGE",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-PLAY",
+        "type": "task",
+        "name": "Choose harmony and compare original, melody or accompanied playback",
+        "stageId": "STG-PLAY",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-REVISE",
+        "type": "decision",
+        "name": "Revise the arrangement?",
+        "stageId": "STG-PLAY",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-OUTPUT",
+        "type": "task",
+        "name": "Choose Save project, PDF or MIDI and a destination",
+        "stageId": "STG-OUTPUT",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [
+          {
+            "participantType": "position",
+            "participantId": "POS-MUSICIAN",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "TASK-WRITE",
+        "type": "system_action",
+        "name": "Write the selected output format",
+        "stageId": "STG-OUTPUT",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "DEC-WRITE",
+        "type": "decision",
+        "name": "Write succeeded?",
+        "stageId": "STG-OUTPUT",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "EXC-WRITE",
+        "type": "exception",
+        "name": "Show save or export error; user can retry",
+        "stageId": "STG-OUTPUT",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [
+          {
+            "participantType": "system",
+            "participantId": "SYS-MELODYTAB",
+            "roles": [
+              "R"
+            ],
+            "confirmationStatus": "confirmed"
+          }
+        ],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "ART-OUTPUT",
+        "type": "artifact",
+        "name": "Chosen .mtab project, printable .pdf or melody .mid",
+        "stageId": "STG-OUTPUT",
+        "unitIds": [
+          "UNIT-APPLICATION"
+        ],
+        "raci": [],
+        "semanticStatus": "confirmed"
+      },
+      {
+        "id": "EVT-END",
+        "type": "end",
+        "name": "Continue composing or close the session",
+        "stageId": "STG-OUTPUT",
+        "unitIds": [
+          "UNIT-MUSICIAN"
+        ],
+        "raci": [],
+        "semanticStatus": "confirmed"
+      }
+    ],
+    "edges": [
+      {
+        "id": "EDGE-01",
+        "sourceId": "EVT-START",
+        "targetId": "DEC-SOURCE",
+        "type": "sequence"
+      },
+      {
+        "id": "EDGE-02",
+        "sourceId": "DEC-SOURCE",
+        "targetId": "TASK-CAPTURE",
+        "type": "decision_yes",
+        "label": "New audio"
+      },
+      {
+        "id": "EDGE-03",
+        "sourceId": "DEC-SOURCE",
+        "targetId": "TASK-OPEN",
+        "type": "decision_no",
+        "label": "Saved project"
+      },
+      {
+        "id": "EDGE-04",
+        "sourceId": "TASK-CAPTURE",
+        "targetId": "DEC-AUDIO",
+        "type": "sequence"
+      },
+      {
+        "id": "EDGE-05",
+        "sourceId": "TASK-CAPTURE",
+        "targetId": "EXC-INPUT",
+        "type": "exception",
+        "label": "Microphone or file-read error"
+      },
+      {
+        "id": "EDGE-06",
+        "sourceId": "TASK-OPEN",
+        "targetId": "DEC-PROJECT",
+        "type": "sequence"
+      },
+      {
+        "id": "EDGE-07",
+        "sourceId": "DEC-AUDIO",
+        "targetId": "TASK-ANALYZE",
+        "type": "decision_yes",
+        "label": "Yes"
+      },
+      {
+        "id": "EDGE-08",
+        "sourceId": "DEC-AUDIO",
+        "targetId": "EXC-INPUT",
+        "type": "decision_no",
+        "label": "No"
+      },
+      {
+        "id": "EDGE-09",
+        "sourceId": "DEC-PROJECT",
+        "targetId": "TASK-REVIEW",
+        "type": "decision_yes",
+        "label": "Yes: restore notes and audio"
+      },
+      {
+        "id": "EDGE-10",
+        "sourceId": "DEC-PROJECT",
+        "targetId": "EXC-INPUT",
+        "type": "decision_no",
+        "label": "No"
+      },
+      {
+        "id": "EDGE-11",
+        "sourceId": "EXC-INPUT",
+        "targetId": "DEC-SOURCE",
+        "type": "rework",
+        "label": "User retries"
+      },
+      {
+        "id": "EDGE-12",
+        "sourceId": "TASK-ANALYZE",
+        "targetId": "DEC-NOTES",
+        "type": "sequence"
+      },
+      {
+        "id": "EDGE-13",
+        "sourceId": "TASK-ANALYZE",
+        "targetId": "TASK-REVIEW",
+        "type": "exception",
+        "label": "Cancel: retained notes or empty state"
+      },
+      {
+        "id": "EDGE-14",
+        "sourceId": "DEC-NOTES",
+        "targetId": "TASK-REVIEW",
+        "type": "decision_yes",
+        "label": "Yes"
+      },
+      {
+        "id": "EDGE-15",
+        "sourceId": "DEC-NOTES",
+        "targetId": "EXC-QUALITY",
+        "type": "decision_no",
+        "label": "No"
+      },
+      {
+        "id": "EDGE-16",
+        "sourceId": "EXC-QUALITY",
+        "targetId": "TASK-CAPTURE",
+        "type": "rework",
+        "label": "New take or WAV"
+      },
+      {
+        "id": "EDGE-17",
+        "sourceId": "TASK-REVIEW",
+        "targetId": "TASK-ARRANGE",
+        "type": "sequence",
+        "label": "Valid notes; rejected edits keep previous state"
+      },
+      {
+        "id": "EDGE-18",
+        "sourceId": "TASK-ARRANGE",
+        "targetId": "DEC-RANGE",
+        "type": "sequence"
+      },
+      {
+        "id": "EDGE-19",
+        "sourceId": "DEC-RANGE",
+        "targetId": "TASK-TRANSPOSE",
+        "type": "decision_yes",
+        "label": "Yes: flag unassigned notes"
+      },
+      {
+        "id": "EDGE-20",
+        "sourceId": "DEC-RANGE",
+        "targetId": "TASK-PLAY",
+        "type": "decision_no",
+        "label": "No"
+      },
+      {
+        "id": "EDGE-21",
+        "sourceId": "TASK-TRANSPOSE",
+        "targetId": "DEC-CHANGED",
+        "type": "sequence"
+      },
+      {
+        "id": "EDGE-22",
+        "sourceId": "DEC-CHANGED",
+        "targetId": "TASK-ARRANGE",
+        "type": "decision_yes",
+        "label": "Yes: regenerate"
+      },
+      {
+        "id": "EDGE-23",
+        "sourceId": "DEC-CHANGED",
+        "targetId": "TASK-PLAY",
+        "type": "decision_no",
+        "label": "No: retain warnings"
+      },
+      {
+        "id": "EDGE-24",
+        "sourceId": "TASK-PLAY",
+        "targetId": "DEC-REVISE",
+        "type": "sequence",
+        "label": "Playback optional; output errors leave session editable"
+      },
+      {
+        "id": "EDGE-25",
+        "sourceId": "DEC-REVISE",
+        "targetId": "TASK-REVIEW",
+        "type": "decision_yes",
+        "label": "Yes"
+      },
+      {
+        "id": "EDGE-26",
+        "sourceId": "DEC-REVISE",
+        "targetId": "TASK-OUTPUT",
+        "type": "decision_no",
+        "label": "No"
+      },
+      {
+        "id": "EDGE-27",
+        "sourceId": "TASK-OUTPUT",
+        "targetId": "TASK-WRITE",
+        "type": "sequence",
+        "label": "Confirm destination"
+      },
+      {
+        "id": "EDGE-28",
+        "sourceId": "TASK-WRITE",
+        "targetId": "DEC-WRITE",
+        "type": "sequence"
+      },
+      {
+        "id": "EDGE-29",
+        "sourceId": "DEC-WRITE",
+        "targetId": "ART-OUTPUT",
+        "type": "decision_yes",
+        "label": "Yes"
+      },
+      {
+        "id": "EDGE-30",
+        "sourceId": "DEC-WRITE",
+        "targetId": "EXC-WRITE",
+        "type": "decision_no",
+        "label": "No"
+      },
+      {
+        "id": "EDGE-31",
+        "sourceId": "EXC-WRITE",
+        "targetId": "TASK-OUTPUT",
+        "type": "rework",
+        "label": "Retry destination"
+      },
+      {
+        "id": "EDGE-32",
+        "sourceId": "ART-OUTPUT",
+        "targetId": "EVT-END",
+        "type": "document_output",
+        "label": "Local file"
+      }
+    ]
+  },
+  "layout": {
+    "processId": "PROC-MELODYTAB",
+    "direction": "top_to_bottom",
+    "viewMode": "canvas",
+    "items": [
+      {
+        "efdId": "EVT-START",
+        "x": 100,
+        "y": 40,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-SOURCE",
+        "x": 100,
+        "y": 170,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-CAPTURE",
+        "x": 100,
+        "y": 320,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-OPEN",
+        "x": 550,
+        "y": 320,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-AUDIO",
+        "x": 100,
+        "y": 460,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-PROJECT",
+        "x": 550,
+        "y": 460,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "EXC-INPUT",
+        "x": 1000,
+        "y": 390,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-ANALYZE",
+        "x": 100,
+        "y": 620,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-NOTES",
+        "x": 100,
+        "y": 770,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "EXC-QUALITY",
+        "x": 1000,
+        "y": 770,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-REVIEW",
+        "x": 100,
+        "y": 940,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-ARRANGE",
+        "x": 550,
+        "y": 1100,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-RANGE",
+        "x": 550,
+        "y": 1250,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-TRANSPOSE",
+        "x": 100,
+        "y": 1250,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-CHANGED",
+        "x": 100,
+        "y": 1400,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-PLAY",
+        "x": 550,
+        "y": 1550,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-REVISE",
+        "x": 550,
+        "y": 1700,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-OUTPUT",
+        "x": 100,
+        "y": 1870,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "TASK-WRITE",
+        "x": 550,
+        "y": 2010,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "DEC-WRITE",
+        "x": 550,
+        "y": 2150,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "EXC-WRITE",
+        "x": 1000,
+        "y": 2150,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "ART-OUTPUT",
+        "x": 550,
+        "y": 2310,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      },
+      {
+        "efdId": "EVT-END",
+        "x": 550,
+        "y": 2450,
+        "width": 330,
+        "height": 90,
+        "autoFitText": true,
+        "fillColor": "#1F2327",
+        "strokeColor": "#65DBBC",
+        "textStyle": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "color": "#EDF0EE",
+          "wrap": true
+        }
+      }
+    ],
+    "edges": [
+      {
+        "efdId": "EDGE-01",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-02",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-03",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-04",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-05",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-06",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-07",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-08",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-09",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-10",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-11",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-12",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-13",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-14",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-15",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-16",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-17",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-18",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-19",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-20",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-21",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-22",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-23",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-24",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-25",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-26",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-27",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-28",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-29",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-30",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-31",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      },
+      {
+        "efdId": "EDGE-32",
+        "sourceAnchor": "bottom",
+        "targetAnchor": "top",
+        "pathType": "orthogonal",
+        "routingMode": "auto"
+      }
+    ]
+  },
+  "drawioMapping": {
+    "mappingVersion": "efd-drawio-1",
+    "processId": "PROC-MELODYTAB",
+    "cells": [
+      {
+        "efdId": "EVT-START",
+        "cellId": "cell-EVT-START",
+        "objectType": "start"
+      },
+      {
+        "efdId": "DEC-SOURCE",
+        "cellId": "cell-DEC-SOURCE",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "TASK-CAPTURE",
+        "cellId": "cell-TASK-CAPTURE",
+        "objectType": "task"
+      },
+      {
+        "efdId": "TASK-OPEN",
+        "cellId": "cell-TASK-OPEN",
+        "objectType": "system_action"
+      },
+      {
+        "efdId": "DEC-AUDIO",
+        "cellId": "cell-DEC-AUDIO",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "DEC-PROJECT",
+        "cellId": "cell-DEC-PROJECT",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "EXC-INPUT",
+        "cellId": "cell-EXC-INPUT",
+        "objectType": "exception"
+      },
+      {
+        "efdId": "TASK-ANALYZE",
+        "cellId": "cell-TASK-ANALYZE",
+        "objectType": "system_action"
+      },
+      {
+        "efdId": "DEC-NOTES",
+        "cellId": "cell-DEC-NOTES",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "EXC-QUALITY",
+        "cellId": "cell-EXC-QUALITY",
+        "objectType": "exception"
+      },
+      {
+        "efdId": "TASK-REVIEW",
+        "cellId": "cell-TASK-REVIEW",
+        "objectType": "task"
+      },
+      {
+        "efdId": "TASK-ARRANGE",
+        "cellId": "cell-TASK-ARRANGE",
+        "objectType": "system_action"
+      },
+      {
+        "efdId": "DEC-RANGE",
+        "cellId": "cell-DEC-RANGE",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "TASK-TRANSPOSE",
+        "cellId": "cell-TASK-TRANSPOSE",
+        "objectType": "task"
+      },
+      {
+        "efdId": "DEC-CHANGED",
+        "cellId": "cell-DEC-CHANGED",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "TASK-PLAY",
+        "cellId": "cell-TASK-PLAY",
+        "objectType": "task"
+      },
+      {
+        "efdId": "DEC-REVISE",
+        "cellId": "cell-DEC-REVISE",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "TASK-OUTPUT",
+        "cellId": "cell-TASK-OUTPUT",
+        "objectType": "task"
+      },
+      {
+        "efdId": "TASK-WRITE",
+        "cellId": "cell-TASK-WRITE",
+        "objectType": "system_action"
+      },
+      {
+        "efdId": "DEC-WRITE",
+        "cellId": "cell-DEC-WRITE",
+        "objectType": "decision"
+      },
+      {
+        "efdId": "EXC-WRITE",
+        "cellId": "cell-EXC-WRITE",
+        "objectType": "exception"
+      },
+      {
+        "efdId": "ART-OUTPUT",
+        "cellId": "cell-ART-OUTPUT",
+        "objectType": "artifact"
+      },
+      {
+        "efdId": "EVT-END",
+        "cellId": "cell-EVT-END",
+        "objectType": "end"
+      },
+      {
+        "efdId": "EDGE-01",
+        "cellId": "cell-EDGE-01",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-02",
+        "cellId": "cell-EDGE-02",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-03",
+        "cellId": "cell-EDGE-03",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-04",
+        "cellId": "cell-EDGE-04",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-05",
+        "cellId": "cell-EDGE-05",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-06",
+        "cellId": "cell-EDGE-06",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-07",
+        "cellId": "cell-EDGE-07",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-08",
+        "cellId": "cell-EDGE-08",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-09",
+        "cellId": "cell-EDGE-09",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-10",
+        "cellId": "cell-EDGE-10",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-11",
+        "cellId": "cell-EDGE-11",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-12",
+        "cellId": "cell-EDGE-12",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-13",
+        "cellId": "cell-EDGE-13",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-14",
+        "cellId": "cell-EDGE-14",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-15",
+        "cellId": "cell-EDGE-15",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-16",
+        "cellId": "cell-EDGE-16",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-17",
+        "cellId": "cell-EDGE-17",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-18",
+        "cellId": "cell-EDGE-18",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-19",
+        "cellId": "cell-EDGE-19",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-20",
+        "cellId": "cell-EDGE-20",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-21",
+        "cellId": "cell-EDGE-21",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-22",
+        "cellId": "cell-EDGE-22",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-23",
+        "cellId": "cell-EDGE-23",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-24",
+        "cellId": "cell-EDGE-24",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-25",
+        "cellId": "cell-EDGE-25",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-26",
+        "cellId": "cell-EDGE-26",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-27",
+        "cellId": "cell-EDGE-27",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-28",
+        "cellId": "cell-EDGE-28",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-29",
+        "cellId": "cell-EDGE-29",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-30",
+        "cellId": "cell-EDGE-30",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-31",
+        "cellId": "cell-EDGE-31",
+        "objectType": "edge"
+      },
+      {
+        "efdId": "EDGE-32",
+        "cellId": "cell-EDGE-32",
+        "objectType": "edge"
+      }
+    ]
+  }
+}
